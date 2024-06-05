@@ -13,6 +13,7 @@ import {AuthModel, UserModel} from './_models'
 import * as authHelper from './AuthHelpers'
 import {getUserByToken} from './_requests'
 import {WithChildren} from '../../../../_metronic/helpers'
+import { storage_key } from '../../../utils'
 
 type AuthContextProps = {
   auth: AuthModel | undefined
@@ -33,7 +34,18 @@ const initAuthContextPropsState = {
 const AuthContext = createContext<AuthContextProps>(initAuthContextPropsState)
 
 const useAuth = () => {
-  return useContext(AuthContext)
+  const authContext = useContext(AuthContext)
+  const onSetAuthLocalKey = (key: { token: string, refresh_token: string, token_expired_at: string }) => {
+    localStorage.setItem(storage_key.auth_token, key.token);
+    localStorage.setItem(storage_key.auth_refresh_token, key.refresh_token);
+    localStorage.setItem(storage_key.auth_token_expired_at, key.token_expired_at)
+  }
+  return Object.assign(
+    authContext,
+    {
+      onSetAuthLocalKey
+    }
+  )
 }
 
 const AuthProvider: FC<WithChildren> = ({children}) => {

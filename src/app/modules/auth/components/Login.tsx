@@ -7,6 +7,7 @@ import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {useAuth} from '../core/Auth'
+import { AuthApi } from '../../../apis'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -21,7 +22,7 @@ const loginSchema = Yup.object().shape({
 })
 
 const initialValues = {
-  email: 'admin@demo.com',
+  email: 'hdlong.net@gmail.com',
   password: 'demo',
 }
 
@@ -33,7 +34,7 @@ const initialValues = {
 
 export function Login() {
   const [loading, setLoading] = useState(false)
-  const {saveAuth, setCurrentUser} = useAuth()
+  const {saveAuth, setCurrentUser, onSetAuthLocalKey} = useAuth()
 
   const formik = useFormik({
     initialValues,
@@ -41,16 +42,25 @@ export function Login() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
       try {
-        const {data: auth} = await login(values.email, values.password)
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
-      } catch (error) {
-        console.error(error)
-        saveAuth(undefined)
-        setStatus('The login detail is incorrect')
-        setSubmitting(false)
+        // const {data: auth} = await login(values.email, values.password)
+        // saveAuth(auth)
+        // const {data: user} = await getUserByToken(auth.api_token)
+        // setCurrentUser(user)
+        const response = await AuthApi.login({email:values.email, password:values.password})
+        if(response.context){
+          onSetAuthLocalKey({
+            token:response.context.token,
+            refresh_token:response.context.refresh_token,
+            token_expired_at:response.context.token_expired_at
+          })
+        }
         setLoading(false)
+      } catch (error) {
+        // console.error(error)
+        // saveAuth(undefined)
+        // setStatus('The login detail is incorrect')
+        // setSubmitting(false)
+        // setLoading(false)
       }
     },
   })
