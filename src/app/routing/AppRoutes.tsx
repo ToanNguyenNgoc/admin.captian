@@ -11,7 +11,7 @@ import { PrivateRoutes } from './PrivateRoutes'
 import { ErrorsPage } from '../modules/errors/ErrorsPage'
 import { Logout, AuthPage, useAuth } from '../modules/auth'
 import { App } from '../App'
-import { QrScanPage } from '../pages'
+import { QrScanDetailPage, QrScanPage } from '../pages'
 
 /**
  * Base URL of the website.
@@ -29,6 +29,7 @@ const AppRoutes: FC = () => {
           <Route path='error/*' element={<ErrorsPage />} />
           <Route path='logout' element={<Logout />} />
           <Route path='scan' element={<QrScanPage />} />
+          <Route path='scan/:uid' element={<QrScanDetailPage />} />
           {currentUser ? (
             <>
               <Route path='/*' element={<PrivateRoutes />} />

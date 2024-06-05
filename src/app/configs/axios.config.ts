@@ -1,8 +1,12 @@
 import axios from "axios";
 import queryString from "query-string";
-import { baseURL } from "../utils";
+import { baseURL, storage_key } from "../utils";
 
-export const AxiosConfig = () => {
+interface Options {
+  token?: string
+}
+
+export const AxiosConfig = (options?: Options) => {
   var axiosConfig = axios.create({
     baseURL: baseURL,
     headers: {
@@ -16,7 +20,8 @@ export const AxiosConfig = () => {
     } as any,
   });
   axiosConfig.interceptors.request.use(async (config) => {
-    config.headers.Authorization = `Bearer `
+    const token = options?.token || localStorage.getItem(storage_key.auth_token)
+    config.headers.Authorization = `Bearer ${token}`
     return config
   });
   axiosConfig.interceptors.response.use(

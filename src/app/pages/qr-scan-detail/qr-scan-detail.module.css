@@ -1,0 +1,37 @@
+.section {
+  box-shadow: var(--box-shadow);
+  margin-bottom: 16px;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.detailRow {
+  padding: 8px 0px;
+  border-bottom: solid 1px var(--kt-gray-300);
+}
+
+.detailRow p {
+  font-size: 14px;
+}
+
+.detailRowTitle {
+  font-size: 16px !important;
+  font-weight: 500;
+}
+
+.bottomBtn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 12px 12px 24px 12px;
+  border-radius: 12px 12px 0px 0px;
+  background-color: var(--kt-white);
+  box-shadow: var(--box-shadow);
+}

@@ -1,0 +1,8 @@
+.cnt {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  box-sizing: border-box;
+  margin-right: auto;
+  padding: 0px 12px;
+}
