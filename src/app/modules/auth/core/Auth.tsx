@@ -8,12 +8,13 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react'
-import {LayoutSplashScreen} from '../../../../_metronic/layout/core'
-import {AuthModel, UserModel} from './_models'
+import { LayoutSplashScreen } from '../../../../_metronic/layout/core'
+import { AuthModel, UserModel } from './_models'
 import * as authHelper from './AuthHelpers'
-import {getUserByToken} from './_requests'
-import {WithChildren} from '../../../../_metronic/helpers'
+import { getUserByToken } from './_requests'
+import { WithChildren } from '../../../../_metronic/helpers'
 import { storage_key } from '../../../utils'
+import { AuthApi } from '../../../apis'
 
 type AuthContextProps = {
   auth: AuthModel | undefined
@@ -25,10 +26,10 @@ type AuthContextProps = {
 
 const initAuthContextPropsState = {
   auth: authHelper.getAuth(),
-  saveAuth: () => {},
+  saveAuth: () => { },
   currentUser: undefined,
-  setCurrentUser: () => {},
-  logout: () => {},
+  setCurrentUser: () => { },
+  logout: () => { },
 }
 
 const AuthContext = createContext<AuthContextProps>(initAuthContextPropsState)
@@ -48,7 +49,7 @@ const useAuth = () => {
   )
 }
 
-const AuthProvider: FC<WithChildren> = ({children}) => {
+const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth())
   const [currentUser, setCurrentUser] = useState<UserModel | undefined>()
   const saveAuth = (auth: AuthModel | undefined) => {
@@ -63,27 +64,32 @@ const AuthProvider: FC<WithChildren> = ({children}) => {
   const logout = () => {
     saveAuth(undefined)
     setCurrentUser(undefined)
+    localStorage.removeItem(storage_key.auth_refresh_token)
+    localStorage.removeItem(storage_key.auth_token)
+    localStorage.removeItem(storage_key.auth_token_expired_at)
+
   }
 
   return (
-    <AuthContext.Provider value={{auth, saveAuth, currentUser, setCurrentUser, logout}}>
+    <AuthContext.Provider value={{ auth, saveAuth, currentUser, setCurrentUser, logout }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
-const AuthInit: FC<WithChildren> = ({children}) => {
-  const {auth, logout, setCurrentUser} = useAuth()
+const AuthInit: FC<WithChildren> = ({ children }) => {
+  const { logout, setCurrentUser } = useAuth()
   const didRequest = useRef(false)
   const [showSplashScreen, setShowSplashScreen] = useState(true)
   // We should request user by authToken (IN OUR EXAMPLE IT'S API_TOKEN) before rendering the application
+  const token = localStorage.getItem(storage_key.auth_token)
   useEffect(() => {
     const requestUser = async (apiToken: string) => {
       try {
         if (!didRequest.current) {
-          const {data} = await getUserByToken(apiToken)
-          if (data) {
-            setCurrentUser(data)
+          const response = await AuthApi.getProfile(apiToken)
+          if (response.context) {
+            setCurrentUser(response.context)
           }
         }
       } catch (error) {
@@ -98,8 +104,8 @@ const AuthInit: FC<WithChildren> = ({children}) => {
       return () => (didRequest.current = true)
     }
 
-    if (auth && auth.api_token) {
-      requestUser(auth.api_token)
+    if (token) {
+      requestUser(String(token))
     } else {
       logout()
       setShowSplashScreen(false)
@@ -110,4 +116,4 @@ const AuthInit: FC<WithChildren> = ({children}) => {
   return showSplashScreen ? <LayoutSplashScreen /> : <>{children}</>
 }
 
-export {AuthProvider, AuthInit, useAuth}
+export { AuthProvider, AuthInit, useAuth }

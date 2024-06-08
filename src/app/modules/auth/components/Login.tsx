@@ -23,7 +23,7 @@ const loginSchema = Yup.object().shape({
 
 const initialValues = {
   email: 'hdlong.net@gmail.com',
-  password: 'demo',
+  password: '123456',
 }
 
 /*
@@ -53,8 +53,12 @@ export function Login() {
             refresh_token:response.context.refresh_token,
             token_expired_at:response.context.token_expired_at
           })
+          const responseUser = await AuthApi.getProfile(response.context.token)
+          if(responseUser.context){
+            setCurrentUser(responseUser.context)
+          }
         }
-        setLoading(false)
+        // setLoading(false)
       } catch (error) {
         // console.error(error)
         // saveAuth(undefined)
