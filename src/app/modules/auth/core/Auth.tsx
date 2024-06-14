@@ -11,7 +11,6 @@ import {
 import { LayoutSplashScreen } from '../../../../_metronic/layout/core'
 import { AuthModel, UserModel } from './_models'
 import * as authHelper from './AuthHelpers'
-import { getUserByToken } from './_requests'
 import { WithChildren } from '../../../../_metronic/helpers'
 import { storage_key } from '../../../utils'
 import { AuthApi } from '../../../apis'

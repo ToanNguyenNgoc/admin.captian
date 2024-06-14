@@ -4,7 +4,6 @@ import * as Yup from 'yup'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
-import {getUserByToken, login} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {useAuth} from '../core/Auth'
 import { AuthApi } from '../../../apis'
@@ -58,13 +57,13 @@ export function Login() {
             setCurrentUser(responseUser.context)
           }
         }
-        // setLoading(false)
+        setLoading(false)
       } catch (error) {
-        // console.error(error)
-        // saveAuth(undefined)
-        // setStatus('The login detail is incorrect')
-        // setSubmitting(false)
-        // setLoading(false)
+        console.error(error)
+        saveAuth(undefined)
+        setStatus('The login detail is incorrect')
+        setSubmitting(false)
+        setLoading(false)
       }
     },
   })
