@@ -62,6 +62,7 @@ export function AsideMenuMain() {
       >
         <AsideMenuItem to='/crafted/ticket' title='Ticket' hasBullet={true} />
         <AsideMenuItem to='/crafted/voucher' title='Voucher' hasBullet={true} />
+        <AsideMenuItem to='/crafted/order' title='Order' hasBullet={true} />
       </AsideMenuItemWithSub>
       {/* <AsideMenuItemWithSub
         to='/error'

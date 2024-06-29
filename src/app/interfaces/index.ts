@@ -22,3 +22,4 @@ export interface PageRequest{
 
 export * from './Discount'
 export * from './Ticket'
+export * from './Order'
