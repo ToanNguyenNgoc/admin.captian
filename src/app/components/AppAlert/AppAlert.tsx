@@ -38,7 +38,7 @@ export const AppAlert = forwardRef<AppAlertHandle, AppAlertProps>((props, ref) =
     },
   }))
   return (
-    <div className={style.cnt} ref={boxRef}>
+    <div className={style.cnt} ref={boxRef} style={{ width: 'fit-content' }}>
       <Alert variant={variant} style={{ boxShadow: 'var(--box-shadow)' }}>
         {msg}
       </Alert>

@@ -22,7 +22,7 @@ export const QrScanDetailPage: FC = () => {
       })
       InitLoaderPage.offLoading()
       InitAlert.alert({ message: 'Check in vé thành công !', variant: 'success' })
-      setTimeout(() => navigate(-1), 3500)
+      setTimeout(() => navigate(-1), 1000)
     },
     onError: (error) => {
       InitLoaderPage.offLoading()

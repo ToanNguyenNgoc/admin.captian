@@ -1,8 +1,10 @@
 import React, { FC, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useGetTicketDetail } from "./functions";
+import { useGetTicketDetail, usePostTicket, useUpdateTicket } from "./functions";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
+import { PostTicket } from "../../interfaces";
+import { LoadingButton } from "../../components";
 
 const today = new Date().toISOString().split('T')[0];
 
@@ -31,13 +33,24 @@ export const TicketFormPage: FC = () => {
         setValue('price', price)
         setValue('price_sale', price_sale)
         setValue('note', note)
-        setValue('date_start', dayjs(date_start).format('YYYY-DD-MM'))
+        setValue('date_start', dayjs(date_start).format('YYYY-MM-DD'))
         setValue('date_end', dayjs(date_end).format('YYYY-MM-DD'))
       }
     }
   })
+  const { mutate: mutateUpdate, isLoading: isLoadingUpdate } = useUpdateTicket(Number(id), true)
+  const { mutate: mutateCreate, isLoading: isLoadingCreate } = usePostTicket()
   const onSubmit = (data: any) => {
-    console.log(data)
+    const body: PostTicket = Object.assign(data, {
+      status,
+      date_start: dayjs(data.date_start).format('YYYY-MM-DD HH:mm:ss'),
+      date_end: dayjs(data.date_end).format('YYYY-MM-DD HH:mm:ss'),
+    })
+    if (id) {
+      mutateUpdate(body)
+    } else {
+      mutateCreate(body)
+    }
   }
   return (
     <div className="card p-4">
@@ -167,7 +180,12 @@ export const TicketFormPage: FC = () => {
             {errors.date_start && <small className="form-text text-muted">{errors.date_start.message}</small>}
           </div>
         </div>
-        <button type="submit" className="btn btn-primary mt-5">Submit</button>
+        <LoadingButton
+          className="mt-5"
+          text="Lưu"
+          type="submit"
+          loading={isLoadingCreate || isLoadingUpdate}
+        />
       </form>
     </div>
   )

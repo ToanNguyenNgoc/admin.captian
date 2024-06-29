@@ -1,12 +1,13 @@
-import { FC } from "react";
-import { useGetTickets } from "./functions";
+import { FC, useState } from "react";
+import { useGetTickets, useUpdateTicket } from "./functions";
 import { useNavigate } from "react-router-dom";
 import { KTSVG } from "../../../_metronic/helpers";
 import dayjs from "dayjs";
 import { formatPrice } from "../../utils";
+import { TicketResponse } from "../../interfaces";
 
 export const TicketPage: FC = () => {
-  const { tickets, total=0 } = useGetTickets({ page: 1, limit: 100 })
+  const { tickets, total = 0 } = useGetTickets({ page: 1, limit: 100 })
   const navigate = useNavigate()
   return (
     <div>
@@ -30,7 +31,7 @@ export const TicketPage: FC = () => {
               data-bs-target='#kt_modal_invite_friends'
             >
               <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-3' />
-              New
+              Tạo mới
             </div>
           </div>
         </div>
@@ -59,62 +60,7 @@ export const TicketPage: FC = () => {
               <tbody>
                 {
                   tickets.map(i => (
-                    <tr key={i.id}>
-                      <td>
-                        <span className='text-dark fw-bold text-hover-primary fs-6'>
-                          {i.title}
-                        </span>
-                      </td>
-                      <td>
-                        <span className='text-muted fw-semobold text-muted d-block fs-7'>
-                          {i.content}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="form-check form-switch">
-                          <input disabled checked={i.status === 1 ? true : false} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" />
-                        </div>
-                      </td>
-                      <td>
-                        {formatPrice(i.price)}
-                      </td>
-                      <td>
-                        {formatPrice(i.price_sale)}
-                      </td>
-                      <td>
-                        {dayjs(i.date_start).format("DD/MM/YYYY")}
-                      </td>
-                      <td>
-                        {dayjs(i.date_end).format("DD/MM/YYYY")}
-                      </td>
-                      <td>
-                        <div className='d-flex justify-content-end flex-shrink-0'>
-                          <div
-                            onClick={() => navigate(String(i.id))}
-                            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-                          >
-                            <KTSVG
-                              path='/media/icons/duotune/general/gen019.svg'
-                              className='svg-icon-3'
-                            />
-                          </div>
-                          <div
-                            onClick={()=> navigate(`/crafted/ticket-form/${i.id}`)}
-                            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-                          >
-                            <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
-                          </div>
-                          {/* <div
-                            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm'
-                          >
-                            <KTSVG
-                              path='/media/icons/duotune/general/gen027.svg'
-                              className='svg-icon-3'
-                            />
-                          </div> */}
-                        </div>
-                      </td>
-                    </tr>
+                    <Item key={i.id} i={i} />
                   ))
                 }
               </tbody>
@@ -127,5 +73,80 @@ export const TicketPage: FC = () => {
         {/* begin::Body */}
       </div>
     </div>
+  )
+}
+
+const Item: FC<{ i: TicketResponse }> = ({
+  i
+}) => {
+  const navigate = useNavigate()
+  const [status, setStatus] = useState(i.status)
+  const { mutate } = useUpdateTicket(i.id)
+  const onChangeStatus = (st: number) => {
+    setStatus(st)
+    mutate(Object.assign(i, { status: st }))
+  }
+  return (
+    <tr key={i.id}>
+      <td>
+        <span className='text-dark fw-bold text-hover-primary fs-6'>
+          {i.title}
+        </span>
+      </td>
+      <td>
+        <span className='text-muted fw-semobold text-muted d-block fs-7'>
+          {i.content}
+        </span>
+      </td>
+      <td>
+        <div className="form-check form-switch">
+          <input
+            onChange={e => onChangeStatus(e.target.checked ? 1 : 0)}
+            checked={status === 1 ? true : false}
+            className="form-check-input" type="checkbox"
+            id="flexSwitchCheckDefault"
+          />
+        </div>
+      </td>
+      <td>
+        {formatPrice(i.price)}
+      </td>
+      <td>
+        {formatPrice(i.price_sale)}
+      </td>
+      <td>
+        {dayjs(i.date_start).format("DD/MM/YYYY")}
+      </td>
+      <td>
+        {dayjs(i.date_end).format("DD/MM/YYYY")}
+      </td>
+      <td>
+        <div className='d-flex justify-content-end flex-shrink-0'>
+          <div
+            onClick={() => navigate(String(i.id))}
+            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+          >
+            <KTSVG
+              path='/media/icons/duotune/general/gen019.svg'
+              className='svg-icon-3'
+            />
+          </div>
+          <div
+            onClick={() => navigate(`/crafted/ticket-form/${i.id}`)}
+            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+          >
+            <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
+          </div>
+          {/* <div
+            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm'
+          >
+            <KTSVG
+              path='/media/icons/duotune/general/gen027.svg'
+              className='svg-icon-3'
+            />
+          </div> */}
+        </div>
+      </td>
+    </tr>
   )
 }
