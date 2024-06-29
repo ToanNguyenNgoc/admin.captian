@@ -60,12 +60,12 @@ const Scanner: FC = () => {
           // style={{ width: "100%", height: "100%", position: 'absolute', zIndex: 1 }}
           />
         </div>
-        <button
+        {/* <button
           onClick={() => handleScan('https://api.riseoftheunderdogs.com/api/ticket-code/')}
           className="btn btn-primary mt-8"
         >
           Test
-        </button>
+        </button> */}
       </div>
     </div>
   )
