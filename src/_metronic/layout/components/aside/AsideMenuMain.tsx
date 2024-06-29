@@ -61,7 +61,7 @@ export function AsideMenuMain() {
         icon='/media/icons/duotune/general/gen022.svg'
       >
         <AsideMenuItem to='/crafted/ticket' title='Ticket' hasBullet={true} />
-        <AsideMenuItem to='/crafted/account/settings' title='Voucher' hasBullet={true} />
+        <AsideMenuItem to='/crafted/voucher' title='Voucher' hasBullet={true} />
       </AsideMenuItemWithSub>
       {/* <AsideMenuItemWithSub
         to='/error'

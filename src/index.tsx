@@ -31,7 +31,14 @@ import { RootStoreContext, rootStore } from './app/models/store'
 setupAxios(axios)
 Chart.register(...registerables)
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      cacheTime: 3600 * 10 * 10
+    }
+  }
+})
 const container = document.getElementById('root')
 if (container) {
   createRoot(container).render(

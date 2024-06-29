@@ -1,13 +1,13 @@
-import {lazy, FC, Suspense} from 'react'
-import {Route, Routes, Navigate} from 'react-router-dom'
-import {MasterLayout} from '../../_metronic/layout/MasterLayout'
+import { lazy, FC, Suspense } from 'react'
+import { Route, Routes, Navigate } from 'react-router-dom'
+import { MasterLayout } from '../../_metronic/layout/MasterLayout'
 import TopBarProgress from 'react-topbar-progress-indicator'
-import {DashboardWrapper} from '../pages/dashboard/DashboardWrapper'
-import {MenuTestPage} from '../pages/MenuTestPage'
-import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
-import {WithChildren} from '../../_metronic/helpers'
+import { DashboardWrapper } from '../pages/dashboard/DashboardWrapper'
+import { MenuTestPage } from '../pages/MenuTestPage'
+import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils'
+import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
-import { TicketPage } from '../pages'
+import { TicketFormPage, TicketPage, VoucherCodePage, VoucherFormPage, VoucherPage } from '../pages'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -68,6 +68,46 @@ const PrivateRoutes = () => {
           }
         />
         <Route
+          path='crafted/ticket-form/:id'
+          element={
+            <SuspensedView>
+              <TicketFormPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='crafted/ticket-form'
+          element={
+            <SuspensedView>
+              <TicketFormPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='crafted/voucher'
+          element={
+            <SuspensedView>
+              <VoucherPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='crafted/voucher/:id'
+          element={
+            <SuspensedView>
+              <VoucherCodePage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='crafted/voucher-form'
+          element={
+            <SuspensedView>
+              <VoucherFormPage />
+            </SuspensedView>
+          }
+        />
+        <Route
           path='apps/chat/*'
           element={
             <SuspensedView>
@@ -90,7 +130,7 @@ const PrivateRoutes = () => {
   )
 }
 
-const SuspensedView: FC<WithChildren> = ({children}) => {
+const SuspensedView: FC<WithChildren> = ({ children }) => {
   const baseColor = getCSSVariableValue('--kt-primary')
   TopBarProgress.config({
     barColors: {
@@ -102,4 +142,4 @@ const SuspensedView: FC<WithChildren> = ({children}) => {
   return <Suspense fallback={<TopBarProgress />}>{children}</Suspense>
 }
 
-export {PrivateRoutes}
+export { PrivateRoutes }

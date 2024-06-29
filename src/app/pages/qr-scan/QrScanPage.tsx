@@ -8,6 +8,7 @@ import { useStores } from "../../models/store";
 import QrReader from "react-qr-reader";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { storage_key } from "../../utils";
 
 export const QrScanPage: FC = observer(() => {
   const { userScanModel } = useStores()
@@ -21,7 +22,11 @@ export const QrScanPage: FC = observer(() => {
 const Scanner: FC = () => {
   const navigate = useNavigate()
   const mutateReadQr = useMutation({
-    mutationFn: (qr: string) => axios.get(qr),
+    mutationFn: (qr: string) => axios.get(qr, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(storage_key.auth_token_scan)}`
+      }
+    }),
     onSuccess: (data) => {
       InitLoaderPage.offLoading()
       const response = data?.data?.context
