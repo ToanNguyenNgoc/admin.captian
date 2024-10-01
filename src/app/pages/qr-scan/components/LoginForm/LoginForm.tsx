@@ -23,19 +23,19 @@ const loginSchema = Yup.object().shape({
 })
 
 const initialValues = {
-  email: 'hdlong.net@gmail.com',
-  password: '123456',
+  email: 'long@gmail.com',
+  password: '123123',
 }
 
 export const LoginForm: FC = () => {
   const { userScanModel } = useStores()
   const mutateLogin = useMutation({
-    mutationFn: (body: { email: string, password: string }) => AuthApi.login(body),
+    mutationFn: (body: { email: string, password: string }) => AuthApi.loginEmployee(body),
     onSuccess: (data) => {
       const response = data.context
       if (response) {
         userScanModel.onSetLogin()
-        sessionStorage.setItem(storage_key.auth_token_scan, response.token)
+        sessionStorage.setItem(storage_key.auth_token_scan, response.access_token)
       }
       InitLoaderPage.offLoading()
     },

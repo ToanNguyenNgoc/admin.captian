@@ -9,6 +9,7 @@ import QrReader from "react-qr-reader";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { storage_key } from "../../utils";
+import { OrderApi } from "../../apis";
 
 export const QrScanPage: FC = observer(() => {
   const { userScanModel } = useStores()
@@ -22,14 +23,10 @@ export const QrScanPage: FC = observer(() => {
 const Scanner: FC = () => {
   const navigate = useNavigate()
   const mutateReadQr = useMutation({
-    mutationFn: (qr: string) => axios.get(qr, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem(storage_key.auth_token_scan)}`
-      }
-    }),
+    mutationFn: (qr: string) => OrderApi.getProductable(qr),
     onSuccess: (data) => {
       InitLoaderPage.offLoading()
-      const response = data?.data?.context
+      const response = data?.context
       if (response) {
         navigate(response.uuid, {
           state: response
@@ -61,7 +58,7 @@ const Scanner: FC = () => {
           />
         </div>
         {/* <button
-          onClick={() => handleScan('https://api.riseoftheunderdogs.com/api/ticket-code/')}
+          onClick={() => handleScan('5152c7b7-99c7-4cd1-97b1-af68eb000954')}
           className="btn btn-primary mt-8"
         >
           Test

@@ -7,7 +7,7 @@ import { MenuTestPage } from '../pages/MenuTestPage'
 import { getCSSVariableValue } from '../../_metronic/assets/ts/_utils'
 import { WithChildren } from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
-import { OrderPage, TicketFormPage, TicketPage, VoucherCodePage, VoucherFormPage, VoucherPage } from '../pages'
+import { OrderPage, TicketFormPage, TicketPage, VoucherCodePage, VoucherFormPage, VoucherPage, OrderFormPage } from '../pages'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -112,6 +112,14 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <OrderPage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='crafted/order-form/:id'
+          element={
+            <SuspensedView>
+              <OrderFormPage />
             </SuspensedView>
           }
         />

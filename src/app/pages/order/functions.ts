@@ -6,7 +6,7 @@ export const useGetOrders = (params?: OrderRequest, options?: UseQueryOptions<Re
   const query = useQuery<Response<ResponsePagination<OrderResponse[]>>>({
     queryKey: ['useGetOrders', params],
     queryFn: () => OrderApi.get(params),
-    staleTime: 3600 * 10 * 10,
+    staleTime: 0,
     ...options
   })
   const orders = query.data?.context.data || []
@@ -16,5 +16,21 @@ export const useGetOrders = (params?: OrderRequest, options?: UseQueryOptions<Re
     orders,
     total_page,
     total
+  })
+}
+
+type OrderResponseType = Response<OrderResponse>
+
+export function useGetOrderDetail(id: number, options?: UseQueryOptions<OrderResponseType>) {
+  const query = useQuery<OrderResponseType>({
+    queryKey: ['useGetOrderDetail', id],
+    queryFn: () => OrderApi.getDetail(id),
+    enabled: !!id,
+    ...options
+  })
+  const detail = query.data?.context
+  return Object.assign(query, {
+    detail,
+    productable: detail?.productable || []
   })
 }

@@ -4,7 +4,7 @@ import { KTSVG } from "../../../_metronic/helpers";
 import { formatPrice } from "../../utils";
 import dayjs from "dayjs";
 import { FormControl, InputLabel, MenuItem, Pagination, Select, SelectChangeEvent } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import queryString from "query-string";
 import { OrderRequest } from "../../interfaces";
 import { identity, omit, pickBy } from "lodash";
@@ -37,7 +37,9 @@ export const OrderPage: FC = () => {
   const navigate = useNavigate()
   const params = queryString.parse(location.search) as OrderRequest
   const { orders, total_page, total } = useGetOrders(Object.assign(params, {
-    limit: 10
+    page:1,
+    limit: 10,
+    sort:'-created_at'
   }))
   const onChangePage = (page: number) => {
     let newParams = Object.assign(params, { page })
@@ -88,13 +90,13 @@ export const OrderPage: FC = () => {
             {/* begin::Table head */}
             <thead>
               <tr className='fw-bold text-muted'>
-                <th className='min-w-150px'>Order Id</th>
+                <th className='min-w-50px'>Order Id</th>
+                <th className='min-w-150px'>Code</th>
                 <th className='min-w-140px'>Tên KH</th>
                 <th className='min-w-120px'>Email</th>
                 <th className='min-w-120px'>Số điện thoại</th>
                 <th className='min-w-120px'>Thanh toán</th>
                 <th className='min-w-120px'>Trạng thái</th>
-                <th className='min-w-120px'>Số lượng</th>
                 <th className='min-w-120px'>Ngày mua</th>
                 <th className='min-w-100px text-end'>Actions</th>
               </tr>
@@ -109,12 +111,11 @@ export const OrderPage: FC = () => {
                       <p className='text-dark fw-bold text-hover-primary fs-6'>
                         {i.id}
                       </p>
-                      {
-                        i.payment_gateway &&
-                        <p className='text-dark text-hover-primary fs-6'>
-                          {i.payment_gateway?.transaction_uuid}
-                        </p>
-                      }
+                    </td>
+                    <td>
+                      <p className='text-dark text-hover-primary fs-6'>
+                        {i.tran_uid}
+                      </p>
                     </td>
                     <td>
                       <p className="text-dark"> {i.fullname}</p>
@@ -123,18 +124,15 @@ export const OrderPage: FC = () => {
                       <span className='text-muted fw-semobold text-muted d-block fs-7'>{i.email}</span>
                     </td>
                     <td>
-                      <span className='text-muted fw-semobold text-muted d-block fs-7'>{i.phone}</span>
+                      <span className='text-muted fw-semobold text-muted d-block fs-7'>{i.telephone}</span>
                     </td>
                     <td>
                       <p className='text-dark fw-bold text-hover-primary fs-6'>
-                        {formatPrice(i.payment_gateway?.amount || i.amount)}
+                        {formatPrice(i.amount)}
                       </p>
                     </td>
                     <td>
                       {renderStatus(i.status)}
-                    </td>
-                    <td>
-                      {i.items.length}
                     </td>
                     <td>
                       {dayjs(i.created_at).format('HH:mm, [ngày] DD/MM/YYYY')}
@@ -146,15 +144,15 @@ export const OrderPage: FC = () => {
                       >
                         <KTSVG path='/media/icons/duotune/general/gen019.svg' className='svg-icon-3' />
                       </a> */}
-                      {/* <a
-                        href='#'
+                      <Link
+                        to={`/crafted/order-form/${i.id}`}
                         className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
                       >
                         <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
-                      </a>
+                      </Link>
                       <a href='#' className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm'>
                         <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
-                      </a> */}
+                      </a>
                     </td>
                   </tr>
                 ))

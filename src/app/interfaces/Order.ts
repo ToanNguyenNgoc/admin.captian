@@ -1,4 +1,4 @@
-import { PageRequest } from ".";
+import { PageRequest, TicketResponse } from ".";
 
 export interface ExtraData {
   payUrl: string;
@@ -36,20 +36,13 @@ export interface Productable {
   deleted_at: string | null;
 }
 
-export interface Item {
+export interface OrderProductable {
   id: number;
-  order_id: number;
   base_price: number;
   quantity: number;
-  productable_type: string;
-  productable_id: number;
-  created_at: string;
-  updated_at: string;
-  uuid: string;
-  is_checkin: number;
-  discount_value: number;
-  productable: Productable;
-  discount: any;
+  ticket:TicketResponse;
+  uuid:string;
+  is_check_in:boolean
 }
 
 export interface PaymentMethod {
@@ -62,20 +55,23 @@ export interface PaymentMethod {
 
 export interface OrderResponse {
   id: number;
+  tran_uid:string;
   status: 'PAID' | 'PENDING' | 'ERROR' | 'CANCELED' | 'CANCELED_BY_USER';
   amount: number;
-  description: string | null;
+  note: string | null;
   fullname: string;
   email: string;
-  phone: string;
+  facebook:string;
+  telephone: string;
   payment_method_id: number;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  discount_value: number;
-  payment_gateway: PaymentGateway;
-  items: Item[];
-  payment_method: PaymentMethod;
+  check_in:boolean;
+  // discount_value: number;
+  // payment_gateway: PaymentGateway;
+  productable: OrderProductable[];
+  // payment_method: PaymentMethod;
 }
 
 export interface OrderRequest extends PageRequest {

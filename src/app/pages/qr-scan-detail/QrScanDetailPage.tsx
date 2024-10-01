@@ -4,7 +4,7 @@ import { Container, InitAlert, InitLoaderPage, MBHeader } from "../../components
 import style from './qr-scan-detail.module.css'
 import dayjs from "dayjs";
 import { useMutation } from "react-query";
-import { CheckInApi } from "../../apis";
+import { CheckInApi, OrderApi } from "../../apis";
 import { AxiosError } from "axios";
 
 export const QrScanDetailPage: FC = () => {
@@ -14,10 +14,10 @@ export const QrScanDetailPage: FC = () => {
   const state = location.state as any
   const [detail, setDetail] = useState<any>(state)
   const mutationCheckIn = useMutation({
-    mutationFn: () => CheckInApi.checkInTicket(params.uid),
+    mutationFn: () => OrderApi.checkInProductable(params.uid),
     onSuccess: (data) => {
       setDetail((prev: any) => {
-        prev.is_checkin = 1
+        prev.is_check_in = 1
         return prev
       })
       InitLoaderPage.offLoading()
@@ -27,7 +27,7 @@ export const QrScanDetailPage: FC = () => {
     onError: (error) => {
       InitLoaderPage.offLoading()
       const err = error as AxiosError
-      if (err.response?.status === 400) {
+      if (err.response?.status === 403) {
         InitAlert.alert({ message: 'Vé này đã được check in !', variant: 'warning' })
       } else {
         InitAlert.alert({ message: 'Có lỗi xảy ra. Vui lòng thử lại !', variant: 'danger' })
@@ -40,6 +40,7 @@ export const QrScanDetailPage: FC = () => {
       mutationCheckIn.mutate()
     }
   }
+  console.log(detail)
   return (
     <div>
       <MBHeader title="Thông tin vé" />
@@ -59,22 +60,22 @@ export const QrScanDetailPage: FC = () => {
                 </div>
                 <div className={style.detailRow}>
                   <p className={style.detailRowTitle} >Số điện thoại</p>
-                  <p>{detail.order?.phone}</p>
+                  <p>{detail.order?.telephone}</p>
                 </div>
               </div>
               <div className={style.section}>
                 <p className={style.sectionTitle}>Thông tin vé</p>
                 <div className={style.detailRow}>
                   <p className={style.detailRowTitle} >Trạng thái</p>
-                  <p>{detail.is_checkin === 1 ? 'Đã check in' : 'Chưa check in'}</p>
+                  <p>{detail.is_check_in ? 'Đã check in' : 'Chưa check in'}</p>
                 </div>
                 <div className={style.detailRow}>
                   <p className={style.detailRowTitle} >Tên vé</p>
-                  <p>{detail.productable?.title}</p>
+                  <p>{detail.ticket?.title}</p>
                 </div>
                 <div className={style.detailRow}>
                   <p className={style.detailRowTitle} >Ngày mua</p>
-                  <p>{dayjs(detail.created_at).format('HH:mm [ngày] DD, [tháng] MM, [năm] YYYY')}</p>
+                  <p>{dayjs(detail.order.created_at).format('HH:mm [ngày] DD, [tháng] MM, [năm] YYYY')}</p>
                 </div>
                 <div className={style.bottomBtn}>
                   <button

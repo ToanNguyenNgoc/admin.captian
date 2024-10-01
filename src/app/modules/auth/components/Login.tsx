@@ -21,8 +21,8 @@ const loginSchema = Yup.object().shape({
 })
 
 const initialValues = {
-  email: 'hdlong.net@gmail.com',
-  password: '123456',
+  email: 'superadmin@gmail.com',
+  password: 'captain2024@',
 }
 
 /*
@@ -48,11 +48,11 @@ export function Login() {
         const response = await AuthApi.login({email:values.email, password:values.password})
         if(response.context){
           onSetAuthLocalKey({
-            token:response.context.token,
-            refresh_token:response.context.refresh_token,
-            token_expired_at:response.context.token_expired_at
+            token:response.context.access_token,
+            refresh_token:'response.context.refresh_token',
+            token_expired_at:'response.context.token_expired_at'
           })
-          const responseUser = await AuthApi.getProfile(response.context.token)
+          const responseUser = await AuthApi.getProfile(response.context.access_token)
           if(responseUser.context){
             setCurrentUser(responseUser.context)
           }
