@@ -171,7 +171,6 @@ export const OrderFormPage: FC = () => {
             <div className="form-group col-12 col-md-5">
               <label>Ghi chú</label>
               <Controller
-                rules={{ required: "Ghi chú" }}
                 control={control}
                 name="note"
                 render={({ field: { onChange, onBlur, value } }) => (
