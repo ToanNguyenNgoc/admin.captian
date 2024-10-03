@@ -82,7 +82,7 @@ const Item: FC<{ i: TicketResponse }> = ({
   const navigate = useNavigate()
   const [status, setStatus] = useState(i.status)
   const { mutate } = useUpdateTicket(i.id)
-  const onChangeStatus = (st: number) => {
+  const onChangeStatus = (st: boolean) => {
     setStatus(st)
     mutate(Object.assign(i, { status: st }))
   }
@@ -101,8 +101,8 @@ const Item: FC<{ i: TicketResponse }> = ({
       <td>
         <div className="form-check form-switch">
           <input
-            onChange={e => onChangeStatus(e.target.checked ? 1 : 0)}
-            checked={status === 1 ? true : false}
+            onChange={e => onChangeStatus(e.target.checked)}
+            checked={status}
             className="form-check-input" type="checkbox"
             id="flexSwitchCheckDefault"
           />

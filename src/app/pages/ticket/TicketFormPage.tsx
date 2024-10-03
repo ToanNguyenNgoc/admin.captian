@@ -5,12 +5,13 @@ import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { PostTicket } from "../../interfaces";
 import { LoadingButton } from "../../components";
+import { entityObj } from "../../utils";
 
 const today = new Date().toISOString().split('T')[0];
 
 export const TicketFormPage: FC = () => {
   const id = useParams().id
-  const [status, setStatus] = useState(0)
+  const [status, setStatus] = useState(false)
   const { handleSubmit, formState: { errors }, control, setValue } = useForm({
     defaultValues: {
       title: '',
@@ -43,13 +44,14 @@ export const TicketFormPage: FC = () => {
   const onSubmit = (data: any) => {
     const body: PostTicket = Object.assign(data, {
       status,
+      price: Number(data.price),
       date_start: dayjs(data.date_start).format('YYYY-MM-DD HH:mm:ss'),
       date_end: dayjs(data.date_end).format('YYYY-MM-DD HH:mm:ss'),
     })
     if (id) {
-      mutateUpdate(body)
+      mutateUpdate(entityObj<PostTicket>(body))
     } else {
-      mutateCreate(body)
+      mutateCreate(entityObj<PostTicket>(body))
     }
   }
   return (
@@ -58,8 +60,8 @@ export const TicketFormPage: FC = () => {
         <div>
           <div className="form-check form-switch">
             <input
-              checked={status === 1}
-              onChange={e => setStatus(e.target.checked ? 1 : 0)} className="form-check-input"
+              checked={status}
+              onChange={e => setStatus(e.target.checked)} className="form-check-input"
               type="checkbox" id="flexSwitchCheckDefault"
             />
             <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Trạng thái</label>
@@ -113,10 +115,10 @@ export const TicketFormPage: FC = () => {
             <label>Giá giảm</label>
             <Controller
               rules={{
-                required: "Nhâp giá tiền",
-                validate: {
-                  isGreaterThan1000: (value) => Number(value) >= 1000 || 'Số tiền lớn hơn 1.000 đ'
-                }
+                // required: "Nhâp giá tiền",
+                // validate: {
+                //   isGreaterThan1000: (value) => Number(value) >= 1000 || 'Số tiền lớn hơn 1.000 đ'
+                // }
               }}
               control={control}
               name="price_sale"

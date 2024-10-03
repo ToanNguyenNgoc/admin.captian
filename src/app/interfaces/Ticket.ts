@@ -2,7 +2,7 @@ export interface TicketResponse {
   id: number;
   title: string;
   content: string;
-  status: number;
+  status: boolean;
   date_start: string;
   date_end: string;
   price: number;
@@ -17,7 +17,7 @@ export interface TicketResponse {
 export interface PostTicket {
   title: string;
   content: string;
-  status: number;
+  status: boolean;
   date_start: string;
   date_end: string;
   price: number;
