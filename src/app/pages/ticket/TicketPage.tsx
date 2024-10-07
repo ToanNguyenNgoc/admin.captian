@@ -46,6 +46,7 @@ export const TicketPage: FC = () => {
               <thead>
                 <tr className='fw-bold text-muted'>
                   <th className='min-w-140px'>Tiêu đề</th>
+                  <th className='min-w-150px'>Ảnh</th>
                   <th className='min-w-120px'>Nội dung</th>
                   <th className='min-w-120px'>Trạng thái</th>
                   <th className='min-w-120px'>Giá gốc</th>
@@ -92,6 +93,12 @@ const Item: FC<{ i: TicketResponse }> = ({
         <span className='text-dark fw-bold text-hover-primary fs-6'>
           {i.title}
         </span>
+      </td>
+      <td>
+        {
+          i.image_url &&
+          <img src={i.image_url} style={{ width: 120, aspectRatio: 16 / 9, borderRadius: 8, objectFit:'cover' }} alt="" />
+        }
       </td>
       <td>
         <span className='text-muted fw-semobold text-muted d-block fs-7'>

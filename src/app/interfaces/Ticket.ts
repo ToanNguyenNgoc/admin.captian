@@ -13,6 +13,7 @@ export interface TicketResponse {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+  image_url?:string
 }
 export interface PostTicket {
   title: string;
@@ -24,4 +25,5 @@ export interface PostTicket {
   price_sale: number;
   note: string;
   address: string;
+  image_url?:string;
 }

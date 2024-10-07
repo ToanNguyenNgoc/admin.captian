@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { ChangeEvent, FC, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useGetTicketDetail, usePostTicket, useUpdateTicket } from "./functions";
 import { useParams } from "react-router-dom";
@@ -6,12 +6,16 @@ import dayjs from "dayjs";
 import { PostTicket } from "../../interfaces";
 import { LoadingButton } from "../../components";
 import { entityObj } from "../../utils";
+import './ticket.scss'
+import { usePostMedia } from "../../hooks";
 
 const today = new Date().toISOString().split('T')[0];
 
 export const TicketFormPage: FC = () => {
   const id = useParams().id
+  const { handlePostMedia, loading: loadingMedia } = usePostMedia()
   const [status, setStatus] = useState(false)
+  const [imageUrl, setImageUrl] = useState<string>()
   const { handleSubmit, formState: { errors }, control, setValue } = useForm({
     defaultValues: {
       title: '',
@@ -29,6 +33,7 @@ export const TicketFormPage: FC = () => {
       if (data.context) {
         const { title, content, status, price, price_sale, note, date_start, date_end } = data.context
         setStatus(status)
+        setImageUrl(data.context.image_url)
         setValue('title', title)
         setValue('content', content)
         setValue('price', price)
@@ -47,12 +52,23 @@ export const TicketFormPage: FC = () => {
       price: Number(data.price),
       date_start: dayjs(data.date_start).format('YYYY-MM-DD HH:mm:ss'),
       date_end: dayjs(data.date_end).format('YYYY-MM-DD HH:mm:ss'),
+      image_url: imageUrl
     })
     if (id) {
       mutateUpdate(entityObj<PostTicket>(body))
     } else {
       mutateCreate(entityObj<PostTicket>(body))
     }
+  }
+  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+    handlePostMedia({
+      e,
+      callBack(data) {
+        if (data.length > 0) {
+          setImageUrl(data[0].original_url)
+        }
+      },
+    })
   }
   return (
     <div className="card p-4">
@@ -65,6 +81,34 @@ export const TicketFormPage: FC = () => {
               type="checkbox" id="flexSwitchCheckDefault"
             />
             <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Trạng thái</label>
+          </div>
+        </div>
+        <div className="d-flex justify-content-center mt-5">
+          <div className="form-group col-12 col-md-6">
+            <div className="ticket-image-cnt">
+              <div className="ticket-image">
+                {
+                  loadingMedia ?
+                    <div className="loading-cnt">
+                      <div className="spinner-border text-success" role="status">
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                    :
+                    null
+                }
+                {
+                  imageUrl ?
+                    <img src={imageUrl} alt="" />
+                    :
+                    null
+                }
+              </div>
+              <div className="input-group mb-3">
+                <input onChange={onChangeFile} type="file" className="form-control" id="inputGroupFile02" />
+                <label className="input-group-text" htmlFor="inputGroupFile02">Upload</label>
+              </div>
+            </div>
           </div>
         </div>
         <div className="d-flex justify-content-between mt-5">
@@ -186,7 +230,7 @@ export const TicketFormPage: FC = () => {
           className="mt-5"
           text="Lưu"
           type="submit"
-          loading={isLoadingCreate || isLoadingUpdate}
+          loading={isLoadingCreate || isLoadingUpdate || loadingMedia}
         />
       </form>
     </div>

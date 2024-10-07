@@ -1,0 +1,35 @@
+.ticket-image-cnt {
+
+  .ticket-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background-color: var(--kt-page-bg);
+    margin-bottom: 12px;
+    border-radius: 8px;
+    position: relative;
+
+    .loading-cnt {
+      position: absolute;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(10px);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .text-success {
+        width: 3rem;
+        height: 3rem;
+      }
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+  }
+}
