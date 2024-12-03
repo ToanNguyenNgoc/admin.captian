@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import queryString from "query-string";
 import { OrderRequest } from "../../interfaces";
 import { identity, omit, pickBy } from "lodash";
+import { useGetTickets } from "../ticket/functions";
 
 const status = ['PAID', 'PENDING', 'ERROR', 'CANCELED']
 
@@ -33,13 +34,14 @@ const renderStatus = (status: 'PAID' | 'PENDING' | 'ERROR' | 'CANCELED' | 'CANCE
 }
 
 export const OrderPage: FC = () => {
+  const { tickets } = useGetTickets({ page: 1, limit: 100 })
   const location = useLocation()
   const navigate = useNavigate()
   const params = queryString.parse(location.search) as OrderRequest
   const { orders, total_page, total } = useGetOrders(Object.assign(params, {
-    page:1,
+    page: 1,
     limit: 10,
-    sort:'-created_at'
+    sort: '-created_at'
   }))
   const onChangePage = (page: number) => {
     let newParams = Object.assign(params, { page })
@@ -53,6 +55,10 @@ export const OrderPage: FC = () => {
     const newParams = pickBy(Object.assign(omit(params, ['page']), { status: event.target.value }), identity())
     navigate(`?${queryString.stringify(newParams)}`)
   };
+  const handleChangeSelectTicket = (event: SelectChangeEvent) => {
+    const newParams = pickBy(Object.assign(omit(params, ['page']), { ticket_id: event.target.value }), identity())
+    navigate(`?${queryString.stringify(newParams)}`)
+  }
   return (
     <div className={`card`} style={{ minHeight: 800 }}>
       {/* begin::Header */}
@@ -70,10 +76,26 @@ export const OrderPage: FC = () => {
             value={params.status || ''}
             onChange={handleChange}
           >
-            <MenuItem value={''}>ALL</MenuItem>
+            <MenuItem value={''}>Tất cả</MenuItem>
             {
               status.map(i => (
                 <MenuItem key={i} value={i}>{i}</MenuItem>
+              ))
+            }
+          </Select>
+        </FormControl>
+        <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+          <InputLabel id="demo-select-small-label">Vé</InputLabel>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-select-small"
+            value={params.ticket_id || ''}
+            onChange={handleChangeSelectTicket}
+          >
+            <MenuItem value={''}>Tất cả</MenuItem>
+            {
+              tickets.map(i => (
+                <MenuItem key={i.id} value={i.id}>{i.title}</MenuItem>
               ))
             }
           </Select>

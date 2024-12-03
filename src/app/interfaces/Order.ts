@@ -40,9 +40,9 @@ export interface OrderProductable {
   id: number;
   base_price: number;
   quantity: number;
-  ticket:TicketResponse;
-  uuid:string;
-  is_check_in:boolean
+  ticket: TicketResponse;
+  uuid: string;
+  is_check_in: boolean
 }
 
 export interface PaymentMethod {
@@ -55,19 +55,19 @@ export interface PaymentMethod {
 
 export interface OrderResponse {
   id: number;
-  tran_uid:string;
+  tran_uid: string;
   status: 'PAID' | 'PENDING' | 'ERROR' | 'CANCELED' | 'CANCELED_BY_USER';
   amount: number;
   note: string | null;
   fullname: string;
   email: string;
-  facebook:string;
+  facebook: string;
   telephone: string;
   payment_method_id: number;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  check_in:boolean;
+  check_in: boolean;
   // discount_value: number;
   // payment_gateway: PaymentGateway;
   productable: OrderProductable[];
@@ -75,5 +75,6 @@ export interface OrderResponse {
 }
 
 export interface OrderRequest extends PageRequest {
-  status?: 'PAID' | 'PENDING' | 'ERROR' | 'CANCELED' | 'CANCELED_BY_USER'
+  status?: 'PAID' | 'PENDING' | 'ERROR' | 'CANCELED' | 'CANCELED_BY_USER',
+  ticket_id?: string
 }
