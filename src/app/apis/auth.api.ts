@@ -1,7 +1,7 @@
 import { AxiosConfig } from "../configs";
 
 export const AuthApi = {
-  login: (data: { email: string, password: string }) =>
+  login: (data: { email: string, password: string, recaptcha?:string }) =>
     AxiosConfig()
       .post('/api/auth/login', data)
       .then(res => res.data),
